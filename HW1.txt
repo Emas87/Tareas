@@ -1,0 +1,132 @@
+
+  /* Hacer un programa que tome como entrada dos archivos fuentes de lenguaje C o C++ e indique que tan similares son. Para establecer la similaridad se va a utilizar cinco formas distintas de comparación "Similaridad de palabras", "Similaridad parcial de palabras", "Similaridad de líneas", "Similaridad de Comentarios" y "Similaridad de secuencia semántica"
+
+   No puede modificar o eliminar los archivos originales de entrada
+
+   Si puede generar archivos intermedios, por ejemplo, si necesita un archivo en el que se haya eliminado los comentarios y los espacios en blanco o cualquier otra modificaci
+   Los archivos intermedios deben ser borrados cuando el programa finalice
+
+Similaridad de palabras
+   Cuenta el número de palabras que coinciden en los dos archivos y que no son reservadas en el lenguaje de programación
+
+   Para determinar si una palabra es reservada o no se utiliza una lista de palabras reservadas para el lenguaje particular (C o C++), las que su programa debe excluir en la búsqueda
+
+   Recuerde que en C o C++ las mayúsculas y minúsculas son importantes, entonces la palabra "If" debe ser considera en la comparación (pues no es una palabra reservada), mientras que la palabra "if" no debe considerarse. Las palabras reservadas con algunas o todas sus letras en mayúsculas debe ser consideradas
+
+   En todos los otros casos, las comparaciones deben hacerse en minúsculas
+
+   Establezca como índice la cantidad de palabras del primer archivo que se repiten en el segundo, más palabras repetidas indica que los archivos son más similares
+
+Similaridad parcial de palabras
+
+   Para cada palabra que no sea reservada en el primer archivo, el programa debe buscar todas las palabras que coincidan parcialmente en el segundo archivo
+
+   Las comparaciones debe hacerlas en minúsculas
+
+   No debe tomar en cuenta las que coincidan con palabras completas en el segundo archivo, eso se hizo en el paso anterior
+
+   Palabras de una sola letra no se toman en cuenta, por ser muy comunes
+Ejemplo:
+              Palabras
+ Primer archivo      Segundo Archivo
+Pala1[0] = "abc"     Pala2[0] = "Aabc"
+Pala1[1] = "abc1"    Pala2[1] = "aBc"
+Pala1[2] = "abc123"  Pala2[2] = "abc1111111"
+Pala1[3] = "abcdef"  Pala2[3] = "abcXXXyz"
+Pala1[4] = "pdq"     Pala2[4] = "i"
+Pala1[5] = "xxx"     Pala2[5] = "j"
+Pala1[6] = "xyz"     Pala2[6] = "pdq"
+Pala1[7] = "yyy"     Pala2[7] = "X"
+
+Palabras parciales similares
+
+PartialWord[0] = "abc"
+PartialWord[1] = "abc1"
+PartialWord[2] = "xxx"
+PartialWord[3] = "xyz"
+
+Establezca como índice la cantidad de similaridades parciales encontradas, más de estas indica mayor similaridad
+
+Similaridad de líneas
+   Compara cada línea del primer archivo con todas las del segundo archivo, en minúsculas
+
+   En este caso se convierten todos los caracteres de espaciamiento a un espacio en blanco y se eliminan los comentarios (/*...*/ y //), antes de realizar la compartación
+
+   Líneas que solo contengan palabras reservadas no se toman en cuenta, deben contener al menos una palabra no reservada, nombre de una variable o función
+
+   Ejemplo, se les agrega el número de línea para mayor claridad
+  Primer archivo                          Segundo archivo
+1 /* ---- begin routine ---- */         1 /* find the file extension */
+2 void fdiv(                            2 void file_divide(
+3   char *fname, // file name           3 char      *fname,
+4   char *path)   /* path */            4 char      *path)
+5 {                                     5 {
+6   int Index1, j;                      6   int i, j;
+7                                       7   while (1)     // loop here
+8   while (1)                           8     j = strlen(fname);
+9       j = strlen(fname);              9
+10 // find the file extension           10
+
+
+Coincidencias
+
+File 1                                  File 2
+3     char *fname, // file name         3 char      *fname,
+4     char *path)   /* path */          4 char      *path)
+9        j = strlen(fname);             8    j = strlen(fname);
+
+
+   Establezca como índice la cantidad de líneas similares encontradas
+
+Similaridad en comentarios
+
+   Utilizando solo minúsculas, su programa debe comparar todas los comentarios del primer archivo con los del segundo,
+   Su programa debe convertir las secuencias de espacios en blanco en un solo espacio en blanco
+   Recuerde que los comentarios pueden ser de dos tipos "/* ... */" y "//" al final de una instrucción
+Ejemplo
+  Archivo 1                               Archivo 2
+1 /* begin routine */                   1 /* find the file extension */
+2 void fdiv(                            2 void file_divide(
+3    char *fname, // file name          3 char      *fname,
+4    char *path)   /* path */           4 char      *path)    // path
+5 {                                     5 {
+6     int Index1, j;                    6   int i, j; /* begin routine */
+7                                       7   while (1)     // loop here
+8     while (1)                         8     j = strlen(fname);
+9        j = strlen(fname);             9
+10    // find the file extension        10   switch (x)
+11    if (x == 5) {                     11   {
+
+
+Coincidencias
+
+  Archivo 1                                  Archivo 2
+1 /* begin routine */                   6    int i, j; /* begin routine */
+4     char *path)   /* path */          4  char      *path)    // path
+10    // find the file extension        1  /* find the file extension */
+
+   Establezca como índice la cantidad de comentarios similares encontradas
+
+Similaridad de secuencia semántica
+
+   Su programa debe encontrar la mayor coincidencia de primeras palabras de línea en ambos archivos,
+   Para la comparación, no se debe tomar en cuenta los comentarios ni los espacios en blanco
+
+Ejemplo
+  Archivo 1                               Archivo 2
+1 if (x == 23)                          1 if (xyz < 2)
+2 {                                     2   for (jjj = 0; jjj < i; jjj++)
+3    // Loop on j here                  3    {
+4   for (j = 0; j < Index; j++)         4      printf("Hello world\n");
+5       printf("x = %i", j);            5    }
+6 }                                     6 else
+7 else                                  7    while (i > 3) i--;
+8   while (i < 5) i++;                  8
+
+   Secuencia encontrada: if, for, print, else, while (longitud: 5)
+   Establezca como índice la longitud de la secuencia encontrada
+
+   Asigne un peso a cada uno de los índices encontrados y calcule el porcentaje de similitud de los dos archivos, 0% no son similares, 100% son iguales, su programa deberá desplegar los valores parciales de los índices, sus ponderaciones (pesos) y el porcentaje de similaridad entre esos dos archivos
+   El programa deberá tratar apropiadamente todas las condiciones de error previsibles: archivos que no existen, número inválido de parámetros, opciones inválidas, etc.
+   Puede utilizar cualquier par de archivos fuente de C o C++ para realizar sus pruebas, los asistentes brindarán algunos con los que puede comenzar las pruebas
+   */
