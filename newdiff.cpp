@@ -7,10 +7,6 @@
 #include <regex>
 #include <cctype>
 
-/*first['a']=10;
-  first['b']=30;
-  first['c']=50;
-  first['d']=70;*/
 using namespace std;
 
 int read_file(ifstream &, map <string,int> &);
@@ -18,14 +14,15 @@ map<string,int> del_res_words(map <string,int> &);
 int hits_count(map <string,int> & ,map <string,int> &);
 void to_lower(map <string,int> &);
 
-
-
 int main(int argc, char* argv[]){
    ifstream files[argc-1];
    map <string,int> listas_palabras[argc-1];
    map <string,int> list_pal_sim_pal[argc-1]; // la lista que tiene las palabras para comparar la similaridad de palabras
 
-
+//Similaridad parcial de palabras
+//Similaridad de líneas
+//Similaridad en comentarios
+//Similaridad de secuencia semántica
    // Verify existance of files
     for(int i = 0; i < argc -1 ; i++){
       string file(argv[i+1]);
@@ -41,8 +38,8 @@ int main(int argc, char* argv[]){
         read_file(files[i],listas_palabras[i]);
     }
 //Similaridad de palabras
-//   En todos los otros casos, las comparaciones deben hacerse en minÃºsculas
-//   Establezca como Ã­ndice la cantidad de palabras del primer archivo que se repiten en el segundo, mÃ¡s palabras repetidas indica que los archivos son mÃ¡s similares
+//   En todos los otros casos, las comparaciones deben hacerse en minúsculas
+//   Establezca como índice la cantidad de palabras del primer archivo que se repiten en el segundo, más palabras repetidas indica que los archivos son más similares
 
     for(int i = 0; i < argc -1 ; i++){
         list_pal_sim_pal[i] = del_res_words(listas_palabras[i]); //eliminar palabras reservadas
@@ -57,10 +54,9 @@ int main(int argc, char* argv[]){
 
     return 0;
 
-//Similaridad parcial de palabras
-//Similaridad de lÃ­neas
-//Similaridad en comentarios
-//Similaridad de secuencia semÃ¡ntica
+
+
+
 
 }
 
@@ -95,11 +91,20 @@ map<string,int> del_res_words(map <string,int> & lista_palabras){ // Delete rese
     "do" , "continue" , "goto" , "struct" , "return" , "union" , "register" , "extern" , "void" , "auto" ,
     "stream" , "cin" , "cout" , "endl" , "flush" , "string", "argc","argv"};
     for(unsigned i = 0; i < (sizeof(lista_res)/sizeof(*lista_res)) ; i++){
-        for(map<string,int>::iterator it = list_pal_sim_pal.begin(); it != list_pal_sim_pal.end(); ++it) {
-            if(lista_res[i].compare(it->first) == 0){
-                list_pal_sim_pal.erase(it);
+        std::map<string,int>::iterator it = list_pal_sim_pal.begin();
+        while (it != list_pal_sim_pal.end()) {
+            if (lista_res[i].compare(it->first) == 0) {
+               it = list_pal_sim_pal.erase(it);
+            } else {
+               ++it;
             }
         }
+//        for(map<string,int>::iterator it = list_pal_sim_pal.begin(); it != list_pal_sim_pal.end(); ++it) {
+//            if(lista_res[i].compare(it->first) == 0){
+//                it = list_pal_sim_pal.erase(it);
+//                it = it;
+//            }
+//        }
 
     }
     return list_pal_sim_pal;
@@ -119,12 +124,24 @@ int hits_count(map <string,int> & lista_ref,map <string,int> & lista_tar){ //com
 
 void to_lower(map <string,int> & lista_palabras){
     string uno;
-    for(map<string,int>::iterator it = lista_palabras.begin(); it != lista_palabras.end(); ++it) {
+//    for(map<string,int>::iterator it = lista_palabras.begin(); it != lista_palabras.end(); ++it) {
+//        uno = it->first;
+//        transform(uno.begin(),uno.end(),uno.begin(), ::tolower);
+//        lista_palabras.erase(it);
+//        lista_palabras[uno] = 1;
+//    }
+    std::map<string,int>::iterator it = lista_palabras.begin();
+    while (it != lista_palabras.end()) {
         uno = it->first;
         transform(uno.begin(),uno.end(),uno.begin(), ::tolower);
-        lista_palabras.erase(it);
-        lista_palabras[uno] = 1;
+        if(lista_palabras.find(uno) == lista_palabras.end() ){
+            it = lista_palabras.erase(it);
+            lista_palabras[uno] = 1;
+        } else {
+            ++it;
+        }
+
+
     }
     cout << "a" << endl;
 }
-
